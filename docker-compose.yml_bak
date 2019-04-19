@@ -1,0 +1,89 @@
+version: "2"
+
+services:
+  db:
+    image: mysql:5.6
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./services/mysql/data:/var/lib/mysql
+    environment:
+      MYSQL_USER: test
+      MYSQL_PASSWORD: 123456
+      MYSQL_ROOT_PASSWORD: 123456
+    container_name: "compose-mysql"
+    restart: always
+    networks:
+      - code-network
+    
+  php:
+    build:
+      context: ./services/php
+      dockerfile: Dockerfile
+    ports:
+     - "9000:9000"
+    volumes:
+      - ./app:/data/www
+      - /Users/Sky/Documents/ppe:/data/ppe
+      - /Users/Sky/Documents/test.sev.com/branches:/data/sev
+      - /Users/Sky/Documents/thinkphp5:/data/tp5
+      - /Users/Sky/Documents/demo:/data/demo
+      - /Users/Sky/Documents/swoole:/data/swoole
+    container_name: "compose-php"
+    restart: always
+    networks:
+      - code-network
+
+  web:
+    image: nginx:1.11.1
+    ports:
+      - "80:80"
+    depends_on:
+      - php
+    volumes:
+      - ./services/nginx/config:/etc/nginx/conf.d
+      - /Users/Sky/Documents/ppe:/data/ppe
+      - /Users/Sky/Documents/test.sev.com/branches:/data/sev
+      - ./app:/data/www
+      - /Users/Sky/Documents/thinkphp5:/data/tp5
+    container_name: "compose-nginx"
+    restart: always
+    networks:
+      - code-network
+
+  redis-6379:
+    image: redis
+    container_name: "redis-6379"
+    ports:
+      - "6379:6379"
+    networks:
+      - code-network
+    restart: always
+  redis-6380:
+    image: redis
+    container_name: "redis-6380"
+    ports:
+      - "6380:6379"
+    networks:
+      - code-network
+    restart: always
+  redis-6381:
+    image: redis
+    container_name: "redis-6381"
+    ports:
+      - "6381:6379"
+    networks:
+      - code-network
+    restart: always
+  memcache:
+    image: memcached
+    ports:
+     - "11211:11211"
+    container_name: "compose-memcache"
+    networks:
+      - code-network
+    restart: always
+
+networks:
+  code-network:
+    driver: bridge
