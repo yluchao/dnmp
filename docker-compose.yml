@@ -6,7 +6,7 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./services/mysql/data:/var/lib/mysql
+      - /data/mysql:/var/lib/mysql
     environment:
       MYSQL_USER: test
       MYSQL_PASSWORD: 123456
@@ -41,8 +41,8 @@ services:
     ports:
      - "9000:9000"
     volumes:
-      - /data/www/htdocs/weiq:/data/ppe
-      - /data/www/htdocs:/data/www/htdocs
+      - /data/htdocs/weiq:/data/ppe
+      - /data/htdocs:/data/www/htdocs
     container_name: "compose-php"
     restart: always
     networks:
@@ -57,9 +57,9 @@ services:
       - memcache
       - redis-6379
     volumes:
-      - ./services/nginx/config:/etc/nginx/conf.d
-      - /data/www/htdocs/weiq:/data/ppe
-      - /data/www/htdocs:/data/www/htdocs
+      - /data/nginx/vhost:/etc/nginx/conf.d
+      - /data/htdocs/weiq:/data/ppe
+      - /data/htdocs:/data/www/htdocs
     container_name: "compose-nginx"
     restart: always
     networks:

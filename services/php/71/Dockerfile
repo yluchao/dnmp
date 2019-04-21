@@ -53,6 +53,7 @@ RUN set -xe \
 		libedit-dev \
 		libxml2-dev \
 		libjpeg-turbo-dev \
+		freetype-dev \
 		gd-dev gettext-dev \
 		libxpm-dev \
 		libpng-dev \
@@ -133,7 +134,8 @@ RUN set -xe \
 	&& pecl install /usr/src/mongodb-1.5.3.tgz \
 	&& pecl install /usr/src/amqp-1.9.4.tgz \
 	&& docker-php-ext-enable sodium yaml redis mongodb amqp \
-    && docker-php-ext-install zip pdo \
+    && docker-php-ext-install zip \
+    && tar -zxvf /usr/src/memcache.tgz \
     && cd /usr/src/memcache \
     && phpize \
     && ./configure \
