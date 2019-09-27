@@ -1,4 +1,8 @@
-FROM alpine:3.9
+FROM alpine:latest
+
+# 修改源
+RUN echo "http://mirrors.aliyun.com/alpine/latest-stable/main/" > /etc/apk/repositories && \
+    echo "http://mirrors.aliyun.com/alpine/latest-stable/community/" >> /etc/apk/repositories
 
 ENV PHPIZE_DEPS \
 		autoconf \

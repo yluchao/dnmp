@@ -1,4 +1,5 @@
 FROM php:7.1-fpm
+ADD ./sources.list /etc/apt
 RUN apt-get update \
     # 相关依赖必须手动安装
     && apt-get install -y --no-install-recommends \

@@ -30,4 +30,4 @@ RUN set -x \
         libsasl2-2 \
     && apt-get purge -y --auto-remove $buildDeps
 
-ENTRYPOINT ["docker-php-entrypoint", "echo exec memcached -d -uroot -P /var/run/memcached.pid"]
+ENTRYPOINT ["docker-php-entrypoint"]
