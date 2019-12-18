@@ -1,0 +1,59 @@
+version: '2'
+
+services:
+  apollo:
+    image: idoop/docker-apollo:latest
+    # portal若出现504错误,则将网络模式改为host. host模式下如果想改端口,参考下方修改端口的环境变量
+    # network_mode: "host"
+    # volumes:
+      # 如果需要查看日志,挂载容器中的/opt路径出来即可.
+    #  - ./logs:/opt
+      # 如果portal需要开启ldap或ad域验证,须挂载此ldap配置文件
+    #  - ./application-ldap.yml:/apollo-portal/config/application-ldap.yml:ro
+    environment:
+      # 开启Portal,默认端口: 8070
+      PORTAL_DB: jdbc:mysql://db:3306/ApolloPortalDB?characterEncoding=utf8
+      PORTAL_DB_USER: admin
+      PORTAL_DB_PWD: admin*PWD*PWD
+      # 如果portal需要开启ldap或ad域验证,须设置该环境变量为TRUE
+      #PORTAL_LDAP: "TRUE"
+      
+      # 开启dev环境, 默认端口: config 8080, admin 8090
+      DEV_DB: jdbc:mysql://db:3306/ApolloConfigDBDev?characterEncoding=utf8
+      DEV_DB_USER: admin
+      DEV_DB_PWD: admin*PWD*PWD
+      
+      # 开启fat环境, 默认端口: config 8081, admin 8091
+      FAT_DB: jdbc:mysql://db:3306/ApolloConfigDBFat?characterEncoding=utf8
+      FAT_DB_USER: admin
+      FAT_DB_PWD: admin*PWD*PWD
+      # 若network_mode为host,则可修改端口,如下:
+      #FAT_CONFIG_PORT: 8050
+      #FAT_ADMIN_PORT: 8051
+           
+      # 指定远程uat地址
+      #UAT_URL: http://192.168.1.2:8080
+      
+      # 指定远程pro地址
+      #PRO_URL: http://www.example.com:8080
+      container_name: "compose-apollo"
+      restart: always
+      networks:
+        - apollo-network
+
+  db:
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_USER: admin
+      MYSQL_PASSWORD: admin*PWD*PWD
+      MYSQL_ROOT_PASSWORD: admin*PWD*PWD
+    container_name: "compose-mysql"
+    restart: always
+    networks:
+      - apollo-network
+
+networks:
+  apollo-network:
+    driver: bridge

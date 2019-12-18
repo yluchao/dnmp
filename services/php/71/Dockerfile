@@ -84,10 +84,10 @@ RUN set -xe \
 		--with-config-file-scan-dir="$PHP_INI_DIR/conf.d" \
 		--enable-option-checking=fatal \
 		--with-mhash \
+		--enable-opcache \
 		--enable-ftp \
 		--enable-mbstring \
 		--enable-mysqlnd \
-		--enable-opcache \
     	--enable-pcntl \
 		--enable-xml \
 		--enable-sockets \
