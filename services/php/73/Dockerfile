@@ -148,7 +148,7 @@ RUN set -xe \
 	&& docker-php-source delete \
 	\
 	# docker-php-ext-install 安装扩展
-	&& docker-php-ext-install pgsql pdo_pgsql seaslog opcache\
+	&& docker-php-ext-install pgsql pdo_pgsql seaslog opcache zip\
 	\
 	&& runDeps="$( \
 		scanelf --needed --nobanner --format '%n#p' --recursive /usr/local \
@@ -211,4 +211,4 @@ EXPOSE 9000
 
 COPY .bashrc /root/
 
-CMD ["docker-php-entrypoint"]
+CMD ["php-fpm"]
