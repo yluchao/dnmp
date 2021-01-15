@@ -2,4 +2,3 @@ assets/*
 *.DS_Store
 services/mysql/data/
 *.idea
-docker-compose.yml

@@ -1,0 +1,55 @@
+version: "3.7"
+services:
+  web:
+    image: alenx/walle-web:2.1
+    container_name: walle-nginx
+    hostname: nginx-web
+    ports:
+      - "8081:80"
+    depends_on:
+      - python
+    networks:
+      - walle-net
+    restart: always
+
+  python:
+    image: alenx/walle-python:2.1
+    container_name: walle-python
+    hostname: walle-python
+    env_file:
+      # walle.env需和docker-compose在同级目录
+      - ./walle.env
+    command: bash -c "cd /opt/walle_home/ && /bin/bash admin.sh migration &&  python waller.py"
+    expose:
+      - "5000"
+    volumes:
+      - /data/walle/home/plugins/:/opt/walle_home/plugins/
+      - /data/walle/home/codebase/:/opt/walle_home/codebase/
+      - /data/walle/home/logs/:/opt/walle_home/logs/
+      - /root/.ssh:/root/.ssh/
+    depends_on:
+      - db
+    networks:
+      - walle-net
+    restart: always
+
+  db:
+    image: mysql
+    container_name: walle-mysql
+    hostname: walle-mysql
+    env_file:
+      - ./walle.env
+    command: [ '--default-authentication-plugin=mysql_native_password', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_unicode_ci']
+    ports:
+      - "3307:3306"
+    expose:
+      - "3306"
+    volumes:
+      - /data/walle/mysql:/var/lib/mysql
+    networks:
+      - walle-net
+    restart: always
+
+networks:
+  walle-net:
+    driver: bridge
